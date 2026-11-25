@@ -1,17 +1,23 @@
 import { Routes } from '@angular/router';
 import { Login } from './core/auth/login/login';
-import { ListaPacientes } from './pacientes/lista-pacientes/lista-pacientes';
-import { DetallePaciente } from './pacientes/detalle-paciente/detalle-paciente';
-import { FormularioPaciente } from './pacientes/formulario-paciente/formulario-paciente';
+
+const cargarFormularioPaciente = () =>
+  import('./pacientes/formulario-paciente/formulario-paciente').then(m => m.FormularioPaciente);
 
 export const routes: Routes = [
   { path: '', redirectTo: 'pacientes', pathMatch: 'full' },
   { path: 'login', component: Login },
-
-  { path: 'pacientes', component: ListaPacientes },
-  { path: 'pacientes/nuevo', component: FormularioPaciente },
-  { path: 'pacientes/:id', component: DetallePaciente },
-  { path: 'pacientes/:id/editar', component: FormularioPaciente },
-
+  {
+    path: 'pacientes',
+    loadComponent: () =>
+      import('./pacientes/lista-pacientes/lista-pacientes').then(m => m.ListaPacientes),
+  },
+  { path: 'pacientes/nuevo', loadComponent: cargarFormularioPaciente },
+  {
+    path: 'pacientes/:id',
+    loadComponent: () =>
+      import('./pacientes/detalle-paciente/detalle-paciente').then(m => m.DetallePaciente),
+  },
+  { path: 'pacientes/:id/editar', loadComponent: cargarFormularioPaciente },
   { path: '**', redirectTo: 'pacientes' },
 ];
