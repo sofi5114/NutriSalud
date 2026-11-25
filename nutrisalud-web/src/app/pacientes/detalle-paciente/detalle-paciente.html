@@ -9,39 +9,66 @@
       } @else {
         <p>Sin controles registrados</p>
       }
-      <h3>Historial de controles</h3>
+      <section class="registro-control" aria-labelledby="titulo-registro">
+        <h3 id="titulo-registro">Registrar control</h3>
+        <form #formulario (submit)="registrarControl($event, formulario, {
+          fecha: fecha.value, peso: peso.valueAsNumber, talla: talla.valueAsNumber,
+          hemoglobina: hemoglobina.valueAsNumber
+        })">
+          <fieldset [disabled]="guardandoControl()" aria-label="Datos del control">
+            <label>Fecha <input #fecha type="date" required></label>
+            <label>Peso (kg) <input #peso type="number" min="0.5" max="40" step="0.01" required></label>
+            <label>Talla (cm) <input #talla type="number" min="30" max="130" step="0.01" required></label>
+            <label>Hemoglobina (g/dL) <input #hemoglobina type="number" min="5" max="25" step="0.01" required></label>
+          </fieldset>
+          <button class="principal" type="submit" [disabled]="guardandoControl()">
+            {{ guardandoControl() ? 'Guardando…' : 'Guardar control' }}
+          </button>
+          @if (controlRegistrado()) {
+            <p role="status">Control registrado.</p>
+          }
+          @if (errorControl()) {
+            <p class="aviso-error" role="alert">{{ errorControl() }}</p>
+          }
+        </form>
+      </section>
+      <section class="historial" aria-labelledby="titulo-historial">
+        <h3 id="titulo-historial">Historial de controles</h3>
 
-      @if (cargando()) {
-        <p class="vacio">Cargando controles...</p>
-      } @else if (error()) {
-        <p class="error">{{ error() }}</p>
-      } @else if (controles(); as c) {
-        @if (c.contenido.length === 0) {
-          <p class="vacio">Sin controles registrados</p>
-        } @else {
-          <table>
-            <thead>
-              <tr><th>Fecha</th><th>Peso (kg)</th><th>Talla (cm)</th><th>Hemoglobina (g/dL)</th></tr>
-            </thead>
-            <tbody>
-              @for (k of c.contenido; track k.id) {
-                <tr>
-                  <td>{{ k.fecha | date:'dd/MM/yyyy' }}</td>
-                  <td>{{ k.peso !== null ? (k.peso | number:'1.1-2') : '—' }}</td>
-                  <td>{{ k.talla !== null ? (k.talla | number:'1.1-1') : '—' }}</td>
-                  <td>{{ k.hemoglobina !== null ? (k.hemoglobina | number:'1.1-1') : '—' }}</td>
-                </tr>
-              }
-            </tbody>
-          </table>
+        @if (cargando()) {
+          <p class="vacio">Cargando controles...</p>
+        } @else if (error()) {
+          <p class="error">{{ error() }}</p>
+        } @else if (controles(); as c) {
+          @if (c.contenido.length === 0) {
+            <p class="vacio">Sin controles registrados</p>
+          } @else {
+            <div class="tabla-desplazable" tabindex="0" role="region" aria-label="Tabla de controles">
+              <table aria-labelledby="titulo-historial">
+                <thead>
+                  <tr><th scope="col">Fecha</th><th scope="col">Peso (kg)</th><th scope="col">Talla (cm)</th><th scope="col">Hemoglobina (g/dL)</th></tr>
+                </thead>
+                <tbody>
+                  @for (k of c.contenido; track k.id) {
+                    <tr>
+                      <td>{{ k.fecha | date:'dd/MM/yyyy' }}</td>
+                      <td>{{ k.peso !== null ? (k.peso | number:'1.1-2') : '—' }}</td>
+                      <td>{{ k.talla !== null ? (k.talla | number:'1.1-1') : '—' }}</td>
+                      <td>{{ k.hemoglobina !== null ? (k.hemoglobina | number:'1.1-1') : '—' }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+
+          <nav class="paginador" aria-label="Paginación de controles">
+            <button type="button" [disabled]="actual() === 1" (click)="irA(actual() - 1)">« Anterior</button>
+            <span>Página {{ actual() }} de {{ total() }}</span>
+            <button type="button" [disabled]="actual() >= total()" (click)="irA(actual() + 1)">Siguiente »</button>
+          </nav>
         }
-
-        <nav class="paginador">
-          <button type="button" [disabled]="actual() === 1" (click)="irA(actual() - 1)">« Anterior</button>
-          <span>Página {{ actual() }} de {{ total() }}</span>
-          <button type="button" [disabled]="actual() >= total()" (click)="irA(actual() + 1)">Siguiente »</button>
-        </nav>
-      }
+      </section>
       <div class="acciones">
         <a [routerLink]="['/pacientes', p.id, 'editar']" class="boton">Editar</a>
         <button type="button" class="peligro" (click)="eliminar()">Eliminar</button>

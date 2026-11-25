@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 import { JSend } from '../core/api/jsend';
 import { Pagina } from '../core/api/pagina';
 import { Paciente, PacienteDatos } from '../dominio/paciente';
-import { ControlPaciente } from '../dominio/control';
+import { ControlDatos, ControlPaciente } from '../dominio/control';
 
 @Service()
 export class PacienteApi {
@@ -33,6 +33,13 @@ export class PacienteApi {
       .set('tamano', tamano);
     return this.http.get<JSend<Pagina<ControlPaciente>>>(`${this.url}/${id}/controles`, { params })
       .pipe(map(respuesta => respuesta.data));
+  }
+
+  registrarControl(id: number, control: ControlDatos): Observable<{ id: number }> {
+    return this.http.post<JSend<{ id: number }>>(`${this.url}/${id}/controles`, {
+      control,
+      factorIds: [],
+    }).pipe(map(respuesta => respuesta.data));
   }
 
   crear(datos: PacienteDatos): Observable<Paciente> {

@@ -1,1 +1,145 @@
-.detalle p { color: #555; }
+.detalle p {
+  color: var(--tinta-suave);
+}
+
+.historial {
+  margin-block: 1.75rem 1.5rem;
+  border: 1px solid var(--linea);
+  border-radius: 12px;
+  background: var(--superficie);
+}
+
+.historial h3 {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  color: var(--institucional);
+}
+
+.historial > p {
+  margin: 0;
+  padding: 0 1.25rem 1.25rem;
+}
+
+.historial .error {
+  color: #7a1f17;
+}
+
+.tabla-desplazable {
+  overflow-x: auto;
+}
+
+.tabla-desplazable:focus-visible {
+  outline: 2px solid var(--institucional);
+  outline-offset: -2px;
+}
+
+table {
+  width: 100%;
+  min-width: 26rem;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+th,
+td {
+  padding: .75rem 1.25rem;
+  text-align: left;
+}
+
+th {
+  background: #edf5f4;
+  color: var(--institucional);
+  font-size: .875rem;
+}
+
+td {
+  border-bottom: 1px solid #e9e6dd;
+}
+
+tbody tr:nth-child(even) {
+  background: #faf9f5;
+}
+
+.paginador {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: .5rem .75rem;
+  padding: 1.25rem 1rem 1rem;
+  color: var(--tinta-suave);
+  font-size: .875rem;
+}
+
+.paginador button:disabled {
+  cursor: default;
+}
+
+.acciones {
+  margin-bottom: 0;
+}
+
+.acciones .boton {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.acciones .peligro {
+  color: #8b3029;
+  border-color: #8b3029;
+}
+
+.acciones a:not(.boton) {
+  color: var(--institucional);
+}
+
+@media (max-width: 480px) {
+  th,
+  td {
+    padding-inline: .75rem;
+  }
+
+  .paginador span {
+    order: -1;
+    flex-basis: 100%;
+    text-align: center;
+  }
+}
+
+.registro-control {
+  margin-top: 1.75rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--linea);
+  border-radius: 12px;
+  background: var(--superficie);
+}
+
+.registro-control h3 {
+  margin: 0 0 1rem;
+  color: var(--institucional);
+}
+
+.registro-control fieldset {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  gap: .75rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.registro-control label {
+  display: grid;
+  gap: .35rem;
+  min-width: 0;
+  font-size: .9rem;
+  font-weight: 600;
+}
+
+.registro-control input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
