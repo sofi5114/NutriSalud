@@ -1,0 +1,8 @@
+:host { display: block; background: #0E5A5F; color: #FFFFFF; }
+.contenido { max-width: 1120px; margin: 0 auto; padding: 1.1rem 1rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1.5rem; }
+h1 { margin: 0; font-size: 1.6rem; }
+p  { margin: .2rem 0 0; color: #D6E6E4; }
+nav { display: flex; align-items: center; gap: 1.25rem; }
+nav a { color: #FFFFFF; font-weight: 600; text-decoration: none; }
+nav a.activo { border-bottom: 3px solid #F9A825; }
+nav button { background: transparent; color: #FFFFFF; border-color: #FFFFFF; }

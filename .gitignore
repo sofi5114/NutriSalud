@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.ejemplo
+!.env.properties.ejemplo
+target/
+node_modules/
+dist/
+.angular/
+*.jar
+*.war

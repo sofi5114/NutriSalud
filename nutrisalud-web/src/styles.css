@@ -1,0 +1,15 @@
+:root { --institucional:#0E5A5F; --tinta:#1F2A2E; --tinta-suave:#55616A; --linea:#D9D4C7; --superficie:#FFFFFF; --fondo:#F6F4EE; }
+body { margin:0; font-family: system-ui, sans-serif; background: var(--fondo); color: var(--tinta); }
+button, .boton { min-height: 44px; padding: 0 1rem; border:1px solid var(--institucional); border-radius:6px; background:#fff; color: var(--institucional); font-weight:600; cursor:pointer; }
+button.principal, .boton.principal { background: var(--institucional); color:#fff; }
+input { min-height: 40px; padding: 0 .8rem; border:1px solid var(--linea); border-radius:6px; }
+.acciones { display:flex; flex-wrap:wrap; gap:.75rem; align-items:center; margin-bottom:1rem; }
+.filtros { display:flex; gap:.5rem; margin-bottom:1rem; }
+.filtros a { padding:.3rem .8rem; border:1px solid var(--linea); border-radius:999px; text-decoration:none; color: var(--tinta); }
+.filtros a.activo { background: var(--institucional); color:#fff; }
+.filtros a.nivel { text-transform: capitalize; }
+
+.aviso-error { border-left: 5px solid #B23A2E; background: #FBEAE8; color: #7A1F17; padding: .6rem 1rem; border-radius: 6px; }
+.aviso-error p { margin: .2rem 0; }
+input.ng-invalid.ng-touched { border-color: #B23A2E; background: #FFF6F5; }
+button:disabled { opacity: .6; cursor: wait; }

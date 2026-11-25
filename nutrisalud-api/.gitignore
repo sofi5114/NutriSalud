@@ -1,0 +1,10 @@
+target/
+.idea/
+*.iml
+.DS_Store
+
+# S14 · práctica 3: secretos locales, nunca al repositorio
+.env.properties
+.env
+pruebas/.env
+log.txt

@@ -1,0 +1,14 @@
+<div class="contenido">
+  <div class="marca">
+    <h1>NutriSalud</h1>
+    <p>Seguimiento de anemia infantil en la posta médica</p>
+  </div>
+  <nav>
+    <a routerLink="/pacientes" routerLinkActive="activo">Pacientes</a>
+    @if (auth.haySesion()) {
+      <button type="button" (click)="salir()">Cerrar sesión</button>
+    } @else {
+      <a routerLink="/login" routerLinkActive="activo">Ingresar</a>
+    }
+  </nav>
+</div>

@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "NutriSalud API",
+      "request": "launch",
+      "mainClass": "pe.upn.nutrisalud.NutrisaludApiApplication",
+      "projectName": "nutrisalud-api"
+    }
+  ]
+}

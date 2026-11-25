@@ -1,0 +1,18 @@
+<article [class]="'tarjeta nivel-' + nivelAnemia()">
+  <header>
+    <h3>{{ paciente.nombres }} {{ paciente.apellidos }}</h3>
+    @if (nivelAnemia() === 'severa') {
+      <span class="alerta">Anemia severa: evaluar derivación</span>
+    } @else if (hayAnemia()) {
+      <span class="alerta">Anemia {{ nivelAnemia() }}</span>
+    }
+  </header>
+  <p>DNI {{ paciente.dni ?? 'en trámite' }} · {{ paciente.edadMeses }} meses</p>
+  @if (paciente.hemoglobina !== null) {
+    <p>Hb {{ paciente.hemoglobina | number:'1.1-1' }} g/dL</p>
+    <p>Último control: {{ paciente.fechaUltimoControl | date:'dd/MM/yyyy' }}</p>
+  } @else {
+    <p>Sin controles registrados</p>
+  }
+  <button type="button" (click)="avisarSeleccion()">Ver detalle</button>
+</article>

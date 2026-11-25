@@ -1,0 +1,72 @@
+### Semana 12 · tarea · paciente 540
+@api = http://localhost:8080
+
+### Login (envíalo primero)
+# @name login
+POST {{api}}/api/auth/login
+Content-Type: application/json
+
+{ "correo": "{{$dotenv CORREO_ENFERMERA}}", "clave": "{{$dotenv CLAVE_ENFERMERA}}" }
+
+###
+@token = {{login.response.body.data.token}}
+
+### ======================= EJERCICIO 1 · @ManyToMany =======================
+### 540 → Juntos (1)
+POST {{api}}/api/pacientes/540/programas/1
+Authorization: Bearer {{token}}
+
+### 540 → Vaso de Leche (3)
+POST {{api}}/api/pacientes/540/programas/3
+Authorization: Bearer {{token}}
+
+### GET ANTES del delete → [Juntos, Vaso de Leche]
+GET {{api}}/api/pacientes/540/programas
+
+### (ej4 · 1a) retirar Vaso de Leche → 200
+DELETE {{api}}/api/pacientes/540/programas/3
+Authorization: Bearer {{token}}
+
+### GET DESPUÉS del delete → solo Juntos
+GET {{api}}/api/pacientes/540/programas
+
+### (ej4 · 1b) repetir el delete → 409
+DELETE {{api}}/api/pacientes/540/programas/3
+Authorization: Bearer {{token}}
+
+### ======================= EJERCICIO 2 · transacciones =======================
+### antes de cada escenario, en SQL Server: DELETE FROM paciente_factor WHERE paciente_id = 540;
+
+### Escenario A · [1, 99] · hemoglobina 10.0 → 404   (ej4 · 2a)
+POST {{api}}/api/pacientes/540/controles
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "control": { "fecha": "2026-11-08", "peso": 10.40, "talla": 80.00, "hemoglobina": 10.0 },
+  "factorIds": [1, 99]
+}
+
+### Escenarios B y C · [1, 2] · hemoglobina 4.0 → 409   (ej4 · 2b)
+### B: con @Transactional sin rollbackFor. C: después de agregar rollbackFor y reiniciar la api.
+POST {{api}}/api/pacientes/540/controles
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "control": { "fecha": "2026-11-08", "peso": 10.40, "talla": 80.00, "hemoglobina": 4.0 },
+  "factorIds": [1, 2]
+}
+
+### ======================= EJERCICIO 3 · reporte jpql =======================
+### (ej4 · 3a) rango que incluye a mi paciente → 200
+GET {{api}}/api/reportes/programas/1/pacientes?altitudMin=0&altitudMax=5000
+Authorization: Bearer {{token}}
+
+### (ej4 · 3b) rango que no lo incluye → 200, sin mi paciente
+GET {{api}}/api/reportes/programas/1/pacientes?altitudMin=6000&altitudMax=7000
+Authorization: Bearer {{token}}
+
+### (ej4 · 4) altitudMin mayor que altitudMax → 409
+GET {{api}}/api/reportes/programas/1/pacientes?altitudMin=4000&altitudMax=3000
+Authorization: Bearer {{token}}

@@ -1,0 +1,43 @@
+### Semana 11 · matriz de pruebas de /api/pacientes (extensión REST Client de VS Code)
+@api = http://localhost:8080
+
+### 1 · Login del personal de salud → 200 con data.token
+# @name login
+POST {{api}}/api/auth/login
+Content-Type: application/json
+
+{ "correo": "{{$dotenv CORREO_ENFERMERA}}", "clave": "{{$dotenv CLAVE_ENFERMERA}}" }
+
+###
+@token = {{login.response.body.data.token}}
+
+### 2 · Primera página → 200 (totalElementos 78400)
+GET {{api}}/api/pacientes?pagina=0&tamano=10
+
+### 3 · Buscar por apellido → 200
+GET {{api}}/api/pacientes?buscar=quispe&tamano=10
+
+### 4 · Página que no existe → 200 con contenido vacío
+GET {{api}}/api/pacientes?tamano=10&pagina=9000
+
+### 5 · tamano no numérico → 400
+GET {{api}}/api/pacientes?tamano=abc
+
+### 6 · Un paciente (Mateo) → 200
+GET {{api}}/api/pacientes/1
+
+### 7 · Paciente inexistente → 404
+GET {{api}}/api/pacientes/999999
+
+### 8 · Crear sin token → 401
+POST {{api}}/api/pacientes
+Content-Type: application/json
+
+{ "dni": "", "nombres": "Prueba", "apellidos": "Sin Token", "fechaNacimiento": "2025-01-10", "sexo": "F", "altitudMsnm": 34 }
+
+### 9 · DNI repetido (es de Mateo) → 409
+POST {{api}}/api/pacientes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "dni": "71234567", "nombres": "Copia", "apellidos": "De Mateo", "fechaNacimiento": "2025-01-10", "sexo": "M", "altitudMsnm": 34 }

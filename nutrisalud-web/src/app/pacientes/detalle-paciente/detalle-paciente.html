@@ -1,0 +1,54 @@
+<section class="panel">
+  @if (paciente(); as p) {
+    <article class="detalle">
+      <h2>{{ p.nombres }} {{ p.apellidos }}</h2>
+      <p>DNI {{ p.dni ?? 'en trámite' }} · {{ p.edadMeses }} meses · nació el {{ p.fechaNacimiento | date:'dd/MM/yyyy' }}</p>
+      <p>Vive a {{ p.altitudMsnm }} msnm</p>
+      @if (p.hemoglobina !== null) {
+        <p>Última Hb: {{ p.hemoglobina | number:'1.1-1' }} g/dL ({{ p.fechaUltimoControl | date:'dd/MM/yyyy' }})</p>
+      } @else {
+        <p>Sin controles registrados</p>
+      }
+      <h3>Historial de controles</h3>
+
+      @if (cargando()) {
+        <p class="vacio">Cargando controles...</p>
+      } @else if (error()) {
+        <p class="error">{{ error() }}</p>
+      } @else if (controles(); as c) {
+        @if (c.contenido.length === 0) {
+          <p class="vacio">Sin controles registrados</p>
+        } @else {
+          <table>
+            <thead>
+              <tr><th>Fecha</th><th>Peso (kg)</th><th>Talla (cm)</th><th>Hemoglobina (g/dL)</th></tr>
+            </thead>
+            <tbody>
+              @for (k of c.contenido; track k.id) {
+                <tr>
+                  <td>{{ k.fecha | date:'dd/MM/yyyy' }}</td>
+                  <td>{{ k.peso !== null ? (k.peso | number:'1.1-2') : '—' }}</td>
+                  <td>{{ k.talla !== null ? (k.talla | number:'1.1-1') : '—' }}</td>
+                  <td>{{ k.hemoglobina !== null ? (k.hemoglobina | number:'1.1-1') : '—' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+
+        <nav class="paginador">
+          <button type="button" [disabled]="actual() === 1" (click)="irA(actual() - 1)">« Anterior</button>
+          <span>Página {{ actual() }} de {{ total() }}</span>
+          <button type="button" [disabled]="actual() >= total()" (click)="irA(actual() + 1)">Siguiente »</button>
+        </nav>
+      }
+      <div class="acciones">
+        <a [routerLink]="['/pacientes', p.id, 'editar']" class="boton">Editar</a>
+        <button type="button" class="peligro" (click)="eliminar()">Eliminar</button>
+        <a routerLink="/pacientes">Volver a la lista</a>
+      </div>
+    </article>
+  } @else {
+    <p class="vacio">Cargando paciente...</p>
+  }
+</section>

@@ -1,0 +1,14 @@
+<section class="panel login">
+  <h2>Ingreso del personal de salud</h2>
+  <label>Correo
+    <input #correo type="email" autocomplete="username" placeholder="enfermera@posta.pe">
+  </label>
+  <label>Clave
+    <input #clave type="password" autocomplete="current-password"
+           (keyup.enter)="entrar(correo.value, clave.value)">
+  </label>
+  <button type="button" (click)="entrar(correo.value, clave.value)">Ingresar</button>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+</section>

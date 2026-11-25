@@ -1,0 +1,24 @@
+<section class="panel">
+  <h2>{{ esEdicion ? 'Editar paciente' : 'Nuevo paciente' }}</h2>
+  <form [formGroup]="formulario" (ngSubmit)="guardar()">
+    <label>DNI <small>(8 dígitos; vacío si está en trámite)</small>
+      <input formControlName="dni" maxlength="8" inputmode="numeric">
+    </label>
+    <label>Nombres
+      <input formControlName="nombres">
+    </label>
+    <label>Apellidos
+      <input formControlName="apellidos">
+    </label>
+    <label>Fecha de nacimiento
+      <input type="date" formControlName="fechaNacimiento">
+    </label>
+    <label>Altitud donde vive (msnm)
+      <input type="number" min="0" max="5000" formControlName="altitudMsnm">
+    </label>
+    <div class="acciones">
+      <button type="submit" class="principal">Guardar</button>
+      <a routerLink="/pacientes">Cancelar</a>
+    </div>
+  </form>
+</section>

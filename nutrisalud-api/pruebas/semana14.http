@@ -1,0 +1,78 @@
+### S14 · práctica 1 · mismo dato, dos contratos 
+
+@soap = https://www.dataaccess.com/webservicesserver
+@api = http://localhost:8080
+
+### 0 · Login (envíalo primero: llena {{token}})
+# @name login
+POST {{api}}/api/auth/login
+Content-Type: application/json
+
+{ "correo": "{{$dotenv CORREO_ENFERMERA}}", "clave": "{{$dotenv CLAVE_ENFERMERA}}" }
+
+###
+@token = {{login.response.body.data.token}}
+
+### 1 · SOAP correcto: NumberToWords(25) → 200 con <m:NumberToWordsResult>
+### (operación, parámetro ubiNum y namespace salen de {{soap}}/NumberConversion.wso?WSDL)
+POST {{soap}}/NumberConversion.wso
+Content-Type: text/xml; charset=utf-8
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <NumberToWords xmlns="http://www.dataaccess.com/webservicesserver/">
+      <ubiNum>25</ubiNum>
+    </NumberToWords>
+  </soap:Body>
+</soap:Envelope>
+
+### 2 · SOAP con texto en ubiNum → este servidor NO valida el XSD: responde 200 (hallazgo)
+POST {{soap}}/NumberConversion.wso
+Content-Type: text/xml; charset=utf-8
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <NumberToWords xmlns="http://www.dataaccess.com/webservicesserver/">
+      <ubiNum>quinientos</ubiNum>
+    </NumberToWords>
+  </soap:Body>
+</soap:Envelope>
+
+### 3 · REST correcto: Mateo (id 1) → 200 con JSend success
+GET {{api}}/api/pacientes/1
+Authorization: Bearer {{token}}
+
+### 4 · REST con error: id inexistente → 404 con JSend fail
+GET {{api}}/api/pacientes/999999
+Authorization: Bearer {{token}}
+
+### (extra) el WSDL completo, para la captura de la exposición
+GET {{soap}}/NumberConversion.wso?WSDL
+
+### 2a · SOAP con error: operación que no existe en el WSDL → 500 con <soap:Fault>
+POST {{soap}}/NumberConversion.wso
+Content-Type: text/xml; charset=utf-8
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <NumeroAPalabras xmlns="http://www.dataaccess.com/webservicesserver/">
+      <ubiNum>25</ubiNum>
+    </NumeroAPalabras>
+  </soap:Body>
+</soap:Envelope>
+
+### 2b · SOAP con error: XML mal formado (falta cerrar ubiNum) → 500 con <soap:Fault>
+POST {{soap}}/NumberConversion.wso
+Content-Type: text/xml; charset=utf-8
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <NumberToWords xmlns="http://www.dataaccess.com/webservicesserver/">
+      <ubiNum>25
+    </NumberToWords>
+  </soap:Body>
+</soap:Envelope>
